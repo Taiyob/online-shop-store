@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
+
 const Navbar = () => {
     return (
-        <div>
+        <div className="px-16">
             <div className="navbar bg-base-100">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -50,7 +52,7 @@ const Navbar = () => {
                                     <span className="badge">New</span>
                                 </a>
                             </li>
-                            <li><a>Settings</a></li>
+                            <li><Link to='/dashboard'>Dashboard</Link></li>
                             <li><a>Logout</a></li>
                             <li className="flex flex-row justify-between"><span>Login</span><span>Register</span></li>
                         </ul>
