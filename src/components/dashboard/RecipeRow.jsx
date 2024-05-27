@@ -4,9 +4,10 @@ import Swal from "sweetalert2";
 
 
 /* eslint-disable react/prop-types */
-const RecipeRow = ({ recipe }) => {
-    const handleDelete = () => {
-        Swal.fire({
+const RecipeRow = ({ recipe, index, onDelete }) => {
+    const handleDelete = async () => {
+        console.log("Deleting recipe...", recipe.id);
+        await Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -14,14 +15,25 @@ const RecipeRow = ({ recipe }) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                const result = axios.delete(`http://localhost:3000/recipes/${recipe?.id}`);
-                if (result?.data?.deletedCount > 0) {
+                try {
+                    const response = await axios.delete(`http://localhost:3000/recipes/${recipe?.id}`);
+                    console.log(response);
+                    if (response?.status == 200) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        });
+                        onDelete(recipe?.id);
+                    }
+                } catch (error) {
+                    console.error("Error deleting recipe:", error);
                     Swal.fire({
-                        title: "Deleted!",
-                        text: "Your file has been deleted.",
-                        icon: "success"
+                        title: "Error!",
+                        text: "An error occurred while deleting the recipe.",
+                        icon: "error"
                     });
                 }
             }
@@ -29,12 +41,12 @@ const RecipeRow = ({ recipe }) => {
     }
     return (
         <tr>
-            <th>{recipe?.id}</th>
+            <th>{index + 1}</th>
             <td>{recipe?.title}</td>
             <td>{recipe?.description}</td>
             <td>{recipe?.image}</td>
             <td>{recipe?.category}</td>
-            <td>12/16/2020</td>
+            <td>12/16/2024</td>
             <td>{recipe?.price}</td>
             <td>
                 <div style={{ display: 'flex', gap: '5px' }}>

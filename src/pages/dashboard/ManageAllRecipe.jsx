@@ -3,17 +3,23 @@ import { useEffect, useState } from "react";
 import RecipeRow from "../../components/dashboard/RecipeRow";
 
 const ManageAllRecipe = () => {
-    const [recipes, setRecipes] = useState();
+    const [recipes, setRecipes] = useState([]);
 
-    useEffect(()=>{
-      async function load(){
-        const data = await axios.get('http://localhost:3000/recipes');
-        if(data?.status == 200){
-            setRecipes(data?.data);
+    useEffect(() => {
+        async function load() {
+            const data = await axios.get('http://localhost:3000/recipes');
+            if (data?.status == 200) {
+                setRecipes(data?.data);
+            }
         }
-      }
-      load();
-    },[]);
+        load();
+    }, []);
+
+    const handleDelete = (deletedRecipeId) => {
+        setRecipes(recipes.filter(recipe => recipe.id !== deletedRecipeId));
+        console.log("Recipes after deletion:", recipes);
+    };
+
     return (
         <div>
             <div className="overflow-x-auto w-full px-16 my-10">
@@ -21,7 +27,7 @@ const ManageAllRecipe = () => {
                 <table className="table table-xs table-cell">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>SL</th>
                             <th>Title</th>
                             <th>Description</th>
                             <th>Image link</th>
@@ -32,7 +38,7 @@ const ManageAllRecipe = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {recipes?.map((recipe)=> <RecipeRow key={recipe?.id} recipe={recipe} />)}
+                        {recipes?.map((recipe, index) => <RecipeRow key={recipe?.id} recipe={recipe} index={index} onDelete={handleDelete} />)}
                     </tbody>
                 </table>
             </div>

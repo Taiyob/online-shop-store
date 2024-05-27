@@ -113,13 +113,6 @@
       "description": "A hearty Japanese noodle soup with meat, vegetables, and broth.",
       "image": "https://example.com/images/ramen.jpg",
       "category": "Japanese"
-    },
-    {
-      "id": "147",
-      "title": "test1111",
-      "price": "7878",
-      "category": "Mexican",
-      "descrition": "test"
     }
   ],
   "categories": [

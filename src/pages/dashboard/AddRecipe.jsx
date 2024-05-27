@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const AddRecipe = () => {
     const [categories, setCategories] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function load() {
@@ -14,20 +17,43 @@ const AddRecipe = () => {
         load();
     }, []);
 
-    const handleCreateRecipe = async(e)=>{
+    const handleCreateRecipe = async (e) => {
         e.preventDefault();
 
         const form = e.target;
         const id = form.id.value;
         const title = form.title.value;
-        const categories = form.categories.value;
+        const category = form.category.value;
         const description = form.description.value;
         const image = form.image.value;
         const price = form.price.value;
+        form.reset();
 
-        const recipeData = {id,title,categories,description,image,price};
+        const recipeData = { id, title, category, description, image, price };
 
-        await axios.post('http://localhost:3000/recipes', recipeData);
+        if (recipeData) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to create this!",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, create it!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const result = await axios.post('http://localhost:3000/recipes', recipeData);
+                    if (result?.status == 201) {
+                        Swal.fire({
+                            title: "Created!",
+                            text: "Your recipe has been created.",
+                            icon: "success"
+                        });
+                        navigate('/dashboard/manage-recipe');
+                    }
+                }
+            });
+        }
     }
     return (
         <div>
@@ -48,8 +74,8 @@ const AddRecipe = () => {
                                 <input name="title" id="title" type="text" placeholder="Title" className="w-full rounded-md border border-black p-2" />
                             </div>
                             <div className="col-span-full sm:col-span-3">
-                                <label htmlFor="categories" className="text-sm">Category</label>
-                                <select name="categories" id="categories" className="w-full rounded-md border border-black p-2">
+                                <label htmlFor="category" className="text-sm">Category</label>
+                                <select name="category" id="category" className="w-full rounded-md border border-black p-2">
                                     {categories?.map((category) => <option key={category?.id} value={category?.title}>{category?.title}</option>)}
                                 </select>
                             </div>

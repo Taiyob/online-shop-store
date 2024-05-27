@@ -8,6 +8,8 @@ import DashboardHome from "../pages/dashboard/DashboardHome";
 import ManageAllRecipe from "../pages/dashboard/ManageAllRecipe";
 import EditRecipe from "../pages/dashboard/EditRecipe";
 import AddRecipe from "../pages/dashboard/AddRecipe";
+import AllRecipeCard from "../pages/dashboard/AllRecipeCard";
+import RecipeDetails from "../pages/dashboard/RecipeDetails";
 
 export const router = createBrowserRouter([
     {
@@ -35,6 +37,14 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <DashboardHome />,
+            },
+            {
+                path: 'card-recipe',
+                element: <AllRecipeCard />
+            },
+            {
+                path: 'details-recipe/:id',
+                element: <RecipeDetails />
             },
             {
                 path: 'manage-recipe',
