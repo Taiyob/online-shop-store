@@ -10,6 +10,7 @@ import EditRecipe from "../pages/dashboard/EditRecipe";
 import AddRecipe from "../pages/dashboard/AddRecipe";
 import AllRecipeCard from "../pages/dashboard/AllRecipeCard";
 import RecipeDetails from "../pages/dashboard/RecipeDetails";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
     {
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <DashboardLayout></DashboardLayout>,
+        element: <PrivateRoutes><DashboardLayout></DashboardLayout></PrivateRoutes>,
         children: [
             {
                 index: true,

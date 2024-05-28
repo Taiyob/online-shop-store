@@ -1,6 +1,24 @@
+import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
+import auth from "../firebase/firebase.config";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
+    const [user] = useAuthState(auth);
+    const [signOut] = useSignOut(auth);
+
+    const handleSignOut = async () => {
+        const successLogOut = await signOut();
+        if (successLogOut) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "You are now sign out",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    }
     return (
         <div className="px-16">
             <div className="navbar bg-base-100">
@@ -39,24 +57,34 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <div className="dropdown dropdown-end">
-                        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                            <div className="w-10 rounded-full">
-                                <img alt="Tailwind CSS Navbar component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    {
+                        user?.email ? <div className="dropdown dropdown-end">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                <div className="w-10 rounded-full">
+                                    <img alt="Tailwind CSS Navbar component" src={user?.photoURL} />
+                                </div>
                             </div>
+                            <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                                <li>
+                                    <a className="justify-between">
+                                        Profile
+                                        <span className="badge">New</span>
+                                    </a>
+                                </li>
+                                <li><Link to='/dashboard'>Dashboard</Link></li>
+                                <li><Link onClick={handleSignOut}>Logout</Link></li>
+                            </ul>
+                        </div> : <div className="dropdown dropdown-end">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                <div className="w-10 rounded-full">
+                                    <img alt="Tailwind CSS Navbar component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                                </div>
+                            </div>
+                            <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                                <li className="flex flex-row justify-between"><Link to={`/sign-in`}>Login</Link><Link to={`/sign-up`}>Register</Link></li>
+                            </ul>
                         </div>
-                        <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                            <li>
-                                <a className="justify-between">
-                                    Profile
-                                    <span className="badge">New</span>
-                                </a>
-                            </li>
-                            <li><Link to='/dashboard'>Dashboard</Link></li>
-                            <li><a>Logout</a></li>
-                            <li className="flex flex-row justify-between"><span>Login</span><span>Register</span></li>
-                        </ul>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
