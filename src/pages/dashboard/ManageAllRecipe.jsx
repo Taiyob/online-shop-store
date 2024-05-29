@@ -4,21 +4,51 @@ import RecipeRow from "../../components/dashboard/RecipeRow";
 
 const ManageAllRecipe = () => {
     const [recipes, setRecipes] = useState([]);
+    const [itemsPerPage, setItemPerPage] = useState(5);
+    const [currentPage, setCurrentPage] = useState(0);
+    const count = recipes?.length;
+    const numberOfPages = Math.ceil(count / itemsPerPage);
+    //const page = [];
+
+    // for (let i = 0; i < numberOfPages; i++) {
+    //     page.push(i);
+    // }
+
+    const pages = [...Array(numberOfPages).keys()];
+
+    const handleChange = (e) => {
+        const val = parseInt(e.target.value);
+        setItemPerPage(val);
+        setCurrentPage(0);
+    }
 
     useEffect(() => {
         async function load() {
-            const data = await axios.get('http://localhost:3000/recipes');
+            const data = await axios.get(`http://localhost:3000/recipes?page=${currentPage}&size=${itemsPerPage}`);
             if (data?.status == 200) {
                 setRecipes(data?.data);
             }
         }
         load();
-    }, []);
+
+    }, [recipes, currentPage, itemsPerPage]);
 
     const handleDelete = (deletedRecipeId) => {
         setRecipes(recipes.filter(recipe => recipe.id !== deletedRecipeId));
         console.log("Recipes after deletion:", recipes);
     };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    }
+
+    const handleNextPage = () => {
+        if (currentPage < pages.length - 1) {
+            setCurrentPage(currentPage + 1);
+        }
+    }
 
     return (
         <div>
@@ -41,6 +71,19 @@ const ManageAllRecipe = () => {
                         {recipes?.map((recipe, index) => <RecipeRow key={recipe?.id} recipe={recipe} index={index} onDelete={handleDelete} />)}
                     </tbody>
                 </table>
+                <div>
+                    <button onClick={handlePreviousPage} className="btn btn-outline btn-xs mr-2">Previous</button>
+                    {
+                        pages?.map(page => <button key={page} onClick={() => setCurrentPage(page)} className={`px-2 text-black ${currentPage === page ? 'bg-blue-500' : ''}`}>{page}</button>)
+                    }
+                    <button onClick={handleNextPage} className="btn btn-outline btn-xs ml-2">Next</button>
+                    <select value={itemsPerPage} onChange={handleChange} name="" id="">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
             </div>
         </div>
     );

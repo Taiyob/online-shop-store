@@ -1,19 +1,36 @@
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLogin from "../components/auth/GoogleLogin";
 import auth from "../firebase/firebase.config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
+import { useAuthState, useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useEffect, useState } from "react";
 
 const Signup = () => {
-    const [user] = useAuthState(auth);
+    const [err, setErr] = useState();
+    const userInfo = useAuthState(auth);
+    const [createUserWithEmailAndPassword, user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
     const navigate = useNavigate();
     const from = location?.state?.from?.pathname || '/';
 
+    const handleSignUp = (e) => {
+        e.preventDefault();
+
+        const form = e.target;
+        const email = form.email.value;
+        const password = form.password.value;
+
+        createUserWithEmailAndPassword(email, password);
+    }
+
     useEffect(() => {
-        if (user) {
+        if (userInfo[0]) {
             navigate(from, { replace: true });
         }
-    }, [from, navigate, user])
+        if (error) {
+            setErr(error?.message);
+        }
+    }, [from, navigate, userInfo, error])
+
+    console.log(user, loading);
 
     return (
         <div>
@@ -23,24 +40,25 @@ const Signup = () => {
                         <h1 className="text-5xl font-bold">Sign Up</h1>
                     </div>
                     <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                        <form className="card-body">
+                        <form onSubmit={handleSignUp} className="card-body">
+                            {err && <p className="text-red-500">{err}</p>}
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="email" placeholder="email" className="input input-bordered" required />
+                                <input name="email" type="email" placeholder="email" className="input input-bordered" required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" placeholder="password" className="input input-bordered" required />
+                                <input name="password" type="password" placeholder="password" className="input input-bordered" required />
                                 <label className="label">
                                     <a href="#">Already have an account? <Link to='/sign-in' className="label-text-alt link link-hover text-xl">Sign in</Link></a>
                                 </label>
                             </div>
                             <div className="form-control mt-6">
-                                <button className="btn btn-primary">Sign up</button>
+                                <button type="submit" className="btn btn-primary">Sign up</button>
                             </div>
                         </form>
                         <div className="mx-7 mb-5">
