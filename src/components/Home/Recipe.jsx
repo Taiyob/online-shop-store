@@ -7,7 +7,7 @@ const Recipe = () => {
 
     useEffect(()=>{
         async function load(){
-            const res = await fetch('http://localhost:3000/recipes');
+            const res = await fetch('http://localhost:5000/recipes');
             const data = await res.json();
             setRecipe(data);
         }

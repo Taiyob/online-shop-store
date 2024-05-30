@@ -8,7 +8,7 @@ const AllRecipeCard = () => {
 
     useEffect(() => {
         async function load() {
-            const data = await axios.get('http://localhost:3000/recipes');
+            const data = await axios.get('http://localhost:5000/recipes');
             if (data?.status == 200) {
                 setRecipes(data?.data);
             }

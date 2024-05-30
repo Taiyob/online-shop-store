@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import RecipeRow from "../../components/dashboard/RecipeRow";
 
 const ManageAllRecipe = () => {
+    const [totalPrice, setTotalPrice] = useState(0);
     const [recipes, setRecipes] = useState([]);
     const [itemsPerPage, setItemPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(0);
-    const count = recipes?.length;
+    const [count, setCount] = useState(0)
+    console.log(count);
     const numberOfPages = Math.ceil(count / itemsPerPage);
     //const page = [];
 
@@ -23,15 +25,28 @@ const ManageAllRecipe = () => {
     }
 
     useEffect(() => {
+        fetch('http://localhost:5000/recipesCount')
+            .then(res => res.json())
+            .then(data => setCount(data.count))
+    }, [])
+
+    useEffect(() => {
         async function load() {
-            const data = await axios.get(`http://localhost:3000/recipes?page=${currentPage}&size=${itemsPerPage}`);
+            const data = await axios.get(`http://localhost:5000/recipes?page=${currentPage}&size=${itemsPerPage}`);
             if (data?.status == 200) {
                 setRecipes(data?.data);
             }
+            // const totalPriceSum = data?.data.reduce((acc, recipe) => acc + parseFloat(recipe.price), 0);
+            // setTotalPrice(totalPriceSum);
+            let totalPriceSum = 0;
+            for (const recipe of data?.data) {
+                totalPriceSum += parseFloat(recipe.price);
+            }
+            setTotalPrice(totalPriceSum);
         }
         load();
 
-    }, [recipes, currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage]);
 
     const handleDelete = (deletedRecipeId) => {
         setRecipes(recipes.filter(recipe => recipe.id !== deletedRecipeId));
@@ -70,8 +85,15 @@ const ManageAllRecipe = () => {
                     <tbody>
                         {recipes?.map((recipe, index) => <RecipeRow key={recipe?.id} recipe={recipe} index={index} onDelete={handleDelete} />)}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colSpan="6" className="text-right">Total Price:</th>
+                            <th>{totalPrice.toFixed(2)}</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
-                <div>
+                <div className="mt-10">
                     <button onClick={handlePreviousPage} className="btn btn-outline btn-xs mr-2">Previous</button>
                     {
                         pages?.map(page => <button key={page} onClick={() => setCurrentPage(page)} className={`px-2 text-black ${currentPage === page ? 'bg-blue-500' : ''}`}>{page}</button>)

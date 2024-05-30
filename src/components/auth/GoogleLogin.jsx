@@ -1,12 +1,19 @@
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase/firebase.config';
+import { useState } from 'react';
 
 const GoogleLogin = () => {
+    const [err, setErr] = useState();
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
 
     const handleGoogleLogin = () => {
         signInWithGoogle();
-        console.log(user, loading, error);
+        if(!loading){
+            console.log(user);
+        }else{
+            setErr(error?.message);
+            console.log(err);
+        }
     }
 
     return (

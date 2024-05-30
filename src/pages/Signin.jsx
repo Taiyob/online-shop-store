@@ -19,6 +19,9 @@ const Signin = () => {
         const password = form.password.value;
 
         signInWithEmailAndPassword(email, password);
+        if(!loading){
+            return user;
+        }
     }
 
     useEffect(() => {
@@ -31,7 +34,7 @@ const Signin = () => {
         }
     }, [from, navigate, userInfo, error])
 
-    console.log(user, loading);
+    //console.log(user, loading);
 
     return (
         <div>
