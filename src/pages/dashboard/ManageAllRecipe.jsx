@@ -7,14 +7,10 @@ const ManageAllRecipe = () => {
     const [recipes, setRecipes] = useState([]);
     const [itemsPerPage, setItemPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(0);
-    const [count, setCount] = useState(0)
+    const [count, setCount] = useState(0);
     console.log(count);
     const numberOfPages = Math.ceil(count / itemsPerPage);
-    //const page = [];
 
-    // for (let i = 0; i < numberOfPages; i++) {
-    //     page.push(i);
-    // }
 
     const pages = [...Array(numberOfPages).keys()];
 
@@ -36,8 +32,6 @@ const ManageAllRecipe = () => {
             if (data?.status == 200) {
                 setRecipes(data?.data);
             }
-            // const totalPriceSum = data?.data.reduce((acc, recipe) => acc + parseFloat(recipe.price), 0);
-            // setTotalPrice(totalPriceSum);
             let totalPriceSum = 0;
             for (const recipe of data?.data) {
                 totalPriceSum += parseFloat(recipe.price);
@@ -67,9 +61,9 @@ const ManageAllRecipe = () => {
 
     return (
         <div>
-            <div className="overflow-x-auto w-full px-16 my-10">
-                <h3 className="text-4xl mb-4">Manage All Recipes</h3>
-                <table className="table table-xs table-cell">
+            <div className="w-full px-16 my-10 overflow-x-auto">
+                <h3 className="mb-4 text-4xl">Manage All Recipes</h3>
+                <table className="table table-cell table-xs">
                     <thead>
                         <tr>
                             <th>SL</th>
@@ -94,12 +88,12 @@ const ManageAllRecipe = () => {
                     </tfoot>
                 </table>
                 <div className="mt-10">
-                    <button onClick={handlePreviousPage} className="btn btn-outline btn-xs mr-2">Previous</button>
+                    <button onClick={handlePreviousPage} className="mr-2 btn btn-outline btn-xs">Previous</button>
                     {
                         pages?.map(page => <button key={page} onClick={() => setCurrentPage(page)} className={`px-2 text-black ${currentPage === page ? 'bg-blue-500' : ''}`}>{page}</button>)
                     }
-                    <button onClick={handleNextPage} className="btn btn-outline btn-xs ml-2">Next</button>
-                    <select value={itemsPerPage} onChange={handleChange} name="" id="">
+                    <button onClick={handleNextPage} className="ml-2 btn btn-outline btn-xs">Next</button>
+                    <select value={itemsPerPage} onChange={handleChange}>
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="15">15</option>

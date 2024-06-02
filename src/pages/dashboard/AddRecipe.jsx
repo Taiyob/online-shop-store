@@ -9,7 +9,7 @@ const AddRecipe = () => {
 
     useEffect(() => {
         async function load() {
-            const data = await axios.get('http://localhost:3000/categories');
+            const data = await axios.get('http://localhost:5000/categories');
             if (data?.status == 200) {
                 setCategories(data?.data);
             }
@@ -67,33 +67,33 @@ const AddRecipe = () => {
                         <div className="grid grid-cols-6 gap-4 col-span-full lg:col-span-3">
                             <div className="col-span-full">
                                 <label htmlFor="id" className="text-sm">Id</label>
-                                <input name="id" id="id" type="number" placeholder="Id" className="w-full rounded-md border border-black p-2" />
+                                <input name="id" id="id" type="number" placeholder="Id" className="w-full p-2 border border-black rounded-md" />
                             </div>
                             <div className="col-span-full sm:col-span-3">
                                 <label htmlFor="title" className="text-sm">Title</label>
-                                <input name="title" id="title" type="text" placeholder="Title" className="w-full rounded-md border border-black p-2" />
+                                <input name="title" id="title" type="text" placeholder="Title" className="w-full p-2 border border-black rounded-md" />
                             </div>
                             <div className="col-span-full sm:col-span-3">
                                 <label htmlFor="category" className="text-sm">Category</label>
-                                <select name="category" id="category" className="w-full rounded-md border border-black p-2">
+                                <select name="category" id="category" className="w-full p-2 border border-black rounded-md">
                                     {categories?.map((category) => <option key={category?.id} value={category?.title}>{category?.title}</option>)}
                                 </select>
                             </div>
                             <div className="col-span-full">
                                 <label htmlFor="description" className="text-sm">Description</label>
-                                <textarea name="description" id="description" placeholder="" className="w-full rounded-md border border-black"></textarea>
+                                <textarea name="description" id="description" placeholder="" className="w-full border border-black rounded-md"></textarea>
                             </div>
                             <div className="col-span-full sm:col-span-3">
                                 <label htmlFor="image" className="text-sm">Image Link</label>
-                                <input name="image" id="image" type="text" placeholder="Image Link" className="w-full rounded-md border border-black p-2" />
+                                <input name="image" id="image" type="text" placeholder="Image Link" className="w-full p-2 border border-black rounded-md" />
                             </div>
                             <div className="col-span-full sm:col-span-3">
                                 <label htmlFor="price" className="text-sm">Price</label>
-                                <input name="price" id="price" type="number" placeholder="Price" className="w-full rounded-md border border-black p-2" />
+                                <input name="price" id="price" type="number" placeholder="Price" className="w-full p-2 border border-black rounded-md" />
                             </div>
                             <div className="col-span-full">
                                 <div className="flex items-center space-x-2">
-                                    <button type="submit" className="px-4 py-2 border rounded-md btn btn-transparent bg-transparent">Add</button>
+                                    <button type="submit" className="px-4 py-2 bg-transparent border rounded-md btn btn-transparent">Add</button>
                                 </div>
                             </div>
                         </div>
